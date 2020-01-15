@@ -17,18 +17,29 @@ new Vue({
             if (this.isGameOver()) {
                 return;
             }
+            this.monsterAttacks();
+        },
+        specialAttack: function() {
+            var damage = this.calculateDamage(10, 20);
+            this.monsterHealth -= damage;
+            if (this.isGameOver()) {
+                return;
+            }
+            this.monsterAttacks();
+            
+        },
+        heal: function() {
+            var healing = this.calculateDamage(5, 15);
+            this.playerHealth + healing > 100 ? this.playerHealth = 100 : this.playerHealth += healing;
+            this.monsterAttacks();
+        },
+        giveUp: function() {
+            this.gameIsRunning = false;
+        },
+        monsterAttacks: function() {
             var damage = this.calculateDamage(5, 12);
             this.playerHealth -= damage;
             this.isGameOver();
-        },
-        specialAttack: function() {
-
-        },
-        heal: function() {
-
-        },
-        giveUp: function() {
-
         },
         calculateDamage: function(min, max) {
             return Math.max(Math.floor(Math.random() * max) + 1, min)
