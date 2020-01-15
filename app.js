@@ -3,16 +3,19 @@ new Vue({
     data: {
         playerHealth: 100,
         monsterHealth: 100,
-        gameIsRunning: false
+        gameIsRunning: false,
+        turns: []
     },
     methods: {
         startGame: function() {
             this.gameIsRunning = true;
             this.playerHealth = 100;
             this.monsterHealth = 100;
+            this.turns = [];
         },
         attack: function() {
             var damage = this.calculateDamage(3, 10);
+            this.logTurn(true, `Player hits Monster for ${damage}`)
             this.monsterHealth -= damage;
             if (this.isGameOver()) {
                 return;
@@ -21,6 +24,7 @@ new Vue({
         },
         specialAttack: function() {
             var damage = this.calculateDamage(10, 20);
+            this.logTurn(true, `Player special attacks monster for ${damage}`)
             this.monsterHealth -= damage;
             if (this.isGameOver()) {
                 return;
@@ -31,6 +35,7 @@ new Vue({
         heal: function() {
             var healing = this.calculateDamage(5, 15);
             this.playerHealth + healing > 100 ? this.playerHealth = 100 : this.playerHealth += healing;
+            this.logTurn(true, `Player heals for ${healing}`)
             this.monsterAttacks();
         },
         giveUp: function() {
@@ -40,6 +45,7 @@ new Vue({
             var damage = this.calculateDamage(5, 12);
             this.playerHealth -= damage;
             this.isGameOver();
+            this.logTurn(false, `Monster hits player for ${damage}`)
         },
         calculateDamage: function(min, max) {
             return Math.max(Math.floor(Math.random() * max) + 1, min)
@@ -54,6 +60,12 @@ new Vue({
                 }
                 return true
             } return false
+        },
+        logTurn: function(isPlayer, text) {
+            this.turns.unshift({
+                isPlayer: isPlayer,
+                text: text,
+            });
         }
     }
 });
